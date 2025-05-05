@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+ 		<link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<style>
+			#form-messages {
+				background-color: rgb(255, 232, 232);
+				border: 1px solid red;
+				color: red;
+				display: none;
+				font-size: 12px;
+				font-weight: bold;
+				margin-bottom: 10px;
+				padding: 10px 25px;
+				max-width: 250px;
+			}
+		</style>
+	</head>
+	<body>
+		<form action="" method="post">
+		  username:<input type="text" name="username"><br>
+		  password:<input type="password" name="password"><br>
+		  <input type="checkbox" name="f" value="1">十天内免登录<br>
+		  <input type="submit" value="login">
+		</form>
+		<div class="form">
+			<ul id="form-messages">
+				<li>Generic Error #1</li>
+			</ul>
+			<label for="username">Username</label>
+			<input type="text" id="username" spellcheck="false"><br >
+			<label for="passoword">Passowrd</label>
+			<input type="password" id="passoword" spellcheck="false"><br>
+			<button type="submit" id="btn-submit">Login</button>
+		</div>
+	</body>
+</html>
