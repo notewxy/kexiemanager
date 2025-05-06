@@ -95,7 +95,7 @@ public class AllGroupsServlet extends HttpServlet {
 
         Gson gson = new Gson();
         String json = gson.toJson(r);
-        out.write(json);
+        //out.write(json);
         out.close();
 
         session.close();
