@@ -7,4 +7,8 @@
     <select id="selectAllGroups" resultType="AllGroups">
         select * from allgroups
     </select>
+
+    <delete id="deleteGroupById" parameterType="Integer">
+        delete from allgroups where id = #{id}
+    </delete>
 </mapper>

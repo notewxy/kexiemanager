@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface AllGroupsService{
     List<AllGroups> showGroups();
+    int DelGroupsById(Integer id);
 }

@@ -16,4 +16,9 @@ public class AllGroupsServiceImpl implements AllGroupsService {
     public List<AllGroups> showGroups() {
         return allGroupsMapper.selectAllGroups();
     }
+
+    @Override
+    public int DelGroupsById(Integer id) {
+        return allGroupsMapper.deleteGroupById(id);
+    }
 }
