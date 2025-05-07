@@ -24,36 +24,44 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet({"/AllGroups/list","/AllGroups/del"})
+@WebServlet({"/AllGroups/*"})
 public class AllGroupsServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String servletPath = request.getServletPath();
+
         if ("/AllGroups/list".equals(servletPath)){
             System.out.println("???????????");
             System.out.flush();
             doList(request,response);
         }else if ("/AllGroups/del".equals(servletPath)){
             doDel(request,response);
+        }else if ("/AllGroups/add".equals(servletPath)){
+            doAdd(request,response);
         }
+    }
+
+    private void doAdd(HttpServletRequest request, HttpServletResponse response) {
+        SqlSession session = getSession();
+        AllGroupsService allGroupsService = getAllGroupsService(session);
+
+
     }
 
     private void doDel(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        SqlSessionFactory factory = SSFactory.getSSF();
-        SqlSession session = factory.openSession();
-        AllGroupsMapper allGroupsMapper = session.getMapper(AllGroupsMapper.class);
-
-        AllGroupsService allGroupsService = new AllGroupsServiceImpl(allGroupsMapper);
+        SqlSession session = getSession();
+        AllGroupsService allGroupsService = getAllGroupsService(session);
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
 
         out.print("你好");
-        out.close();
+
 
         //这个数字到时候需要在前端获取
         String idStr = request.getParameter("id");
@@ -61,20 +69,21 @@ public class AllGroupsServlet extends HttpServlet {
 
         int i = allGroupsService.DelGroupsById(id);
         System.out.println(i);
+        if (i>0){
+            out.print("删除成功");
+        }else {
+            out.print("删除失败");
+        }
 
+        out.close();
         session.commit();
         session.close();
     }
 
     private void doList(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        SqlSessionFactory factory = SSFactory.getSSF();
-        System.out.println(factory);
-
-        SqlSession session = factory.openSession();
-        AllGroupsMapper allGroupsMapper = session.getMapper(AllGroupsMapper.class);
-
-        AllGroupsService allGroupsService = new AllGroupsServiceImpl(allGroupsMapper);
+        SqlSession session = getSession();
+        AllGroupsService allGroupsService = getAllGroupsService(session);
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
@@ -99,5 +108,23 @@ public class AllGroupsServlet extends HttpServlet {
         out.close();
 
         session.close();
+    }
+
+    //封装获取service的代码
+    public AllGroupsService getAllGroupsService(SqlSession session){
+
+        AllGroupsMapper allGroupsMapper = session.getMapper(AllGroupsMapper.class);
+        AllGroupsService allGroupsService = new AllGroupsServiceImpl(allGroupsMapper);
+
+        return allGroupsService;
+    }
+
+    //封装获取session的代码
+    public SqlSession getSession(){
+
+        SqlSessionFactory factory = SSFactory.getSSF();
+        SqlSession session = factory.openSession();
+
+        return session;
     }
 }
