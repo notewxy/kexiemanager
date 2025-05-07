@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--从classpath下引入属性文件，不支持 `classpath:` 前缀，后期由Spring代劳-->
+    <properties resource="db.properties"/>
+
+    <!--全局配置-->
+    <settings>
+        <!--执行器类型-->
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="logImpl" value="log4j"/>
+
+        <!--   开启驼峰转换，create_time createTime 不用自己写resultMap了     -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+        <!--开启二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+        <!--在查询块中配置 useCache = "false" 以使自己不被二级缓存-->
+    </settings>
+
+
+    <!--取别名的一些简化用法，推荐第二种（更方便）-->
+    <typeAliases>
+        <!--   <typeAlias type="com.wan.pojo.Clazz" alias="clz"></typeAlias>&lt;!&ndash;正常取别名&ndash;&gt;  -->
+        <package name="com.wan.pojo"/><!--实际上是类名作为别名，首字母小写也可以-->
+    </typeAliases>
+
+
+    <!--环境列表标签: 支持配置多环境-->
+    <environments default="test">
+        <!--环境标签: 使用JDBC事务（支持提交回滚）/ 使用POOLED连接池-->
+        <environment id="test">
+            <!--配置该环境使用JDBC事务管理类，此事务支持提交和回滚-->
+            <transactionManager type="JDBC"/>
+            <!--配置该环境使用POOLED连接池，需注入数据源四项-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--加载Mapper.xml文件-->
+        <!--<mapper resource="com/wan/mapper/ClazzMapper.xml"></mapper>-->
+        <!--mapper接口所在的包名-->
+        <package name="com.wan.mapper"/>
+    </mappers>
+</configuration>
