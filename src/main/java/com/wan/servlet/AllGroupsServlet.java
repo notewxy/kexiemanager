@@ -36,7 +36,38 @@ public class AllGroupsServlet extends HttpServlet {
             doDel(request,response);
         }else if ("/AllGroups/add".equals(servletPath)){
             doAdd(request,response);
+        }else if ("/AllGroups/update".equals(servletPath)){
+            doUpdate(request,response);
         }
+    }
+
+    private void doUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        SqlSession session = getSession();
+        AllGroupsService allGroupsService = getAllGroupsService(session);
+
+        //获取修改的当前id,获取修改的name和introduce
+        AllGroups allGroups = new AllGroups();
+        allGroups.setId(4);
+        allGroups.setName("2");
+        allGroups.setIntroduce("222");
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+
+        int i = allGroupsService.UpdateGroupsById(allGroups);
+        System.out.println(i);
+        if (i>0){
+            out.print("修改成功");
+        }else {
+            out.print("修改失败");
+        }
+
+        out.close();
+
+        session.commit();
+        session.close();
     }
 
     private void doAdd(HttpServletRequest request, HttpServletResponse response)

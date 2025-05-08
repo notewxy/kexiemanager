@@ -15,4 +15,8 @@
     <insert id="addGroups" parameterType="AllGroups">
         insert into allgroups(name,introduce) values(#{name},#{introduce})
     </insert>
+
+    <update id="updateGroupsById" parameterType="AllGroups">
+        update allgroups set name = #{name},introduce = #{introduce} where id = #{id}
+    </update>
 </mapper>

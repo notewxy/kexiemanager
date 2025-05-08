@@ -26,4 +26,9 @@ public class AllGroupsServiceImpl implements AllGroupsService {
     public int AddGroups(AllGroups allGroups) {
         return allGroupsMapper.addGroups(allGroups);
     }
+
+    @Override
+    public int UpdateGroupsById(AllGroups allGroups) {
+        return allGroupsMapper.updateGroupsById(allGroups);
+    }
 }

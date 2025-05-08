@@ -9,4 +9,6 @@ public interface AllGroupsMapper {
     int deleteGroupById(Integer id);
 
     int addGroups(AllGroups allGroups);
+
+    int updateGroupsById(AllGroups allGroups);
 }
