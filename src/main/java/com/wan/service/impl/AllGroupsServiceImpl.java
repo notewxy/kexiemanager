@@ -21,4 +21,9 @@ public class AllGroupsServiceImpl implements AllGroupsService {
     public int DelGroupsById(Integer id) {
         return allGroupsMapper.deleteGroupById(id);
     }
+
+    @Override
+    public int AddGroups(AllGroups allGroups) {
+        return allGroupsMapper.addGroups(allGroups);
+    }
 }

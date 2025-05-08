@@ -7,20 +7,15 @@ import com.wan.r.R;
 import com.wan.service.AllGroupsService;
 import com.wan.service.impl.AllGroupsServiceImpl;
 import com.wan.util.SSFactory;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -31,7 +26,7 @@ public class AllGroupsServlet extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String servletPath = request.getServletPath();
+        String servletPath = request.getServletPath()+request.getPathInfo();
 
         if ("/AllGroups/list".equals(servletPath)){
             System.out.println("???????????");
@@ -44,11 +39,33 @@ public class AllGroupsServlet extends HttpServlet {
         }
     }
 
-    private void doAdd(HttpServletRequest request, HttpServletResponse response) {
+    private void doAdd(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         SqlSession session = getSession();
         AllGroupsService allGroupsService = getAllGroupsService(session);
 
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
 
+
+        //获取前端表单,只需要name和introduce就行
+        AllGroups allGroups = new AllGroups();
+        allGroups.setName("www");
+        allGroups.setIntroduce("111");
+
+        int i = allGroupsService.AddGroups(allGroups);
+        System.out.println(i);
+        if (i>0){
+            out.print("添加成功");
+        }else {
+            out.print("添加失败");
+        }
+
+        out.close();
+
+        session.commit();
+        session.close();
     }
 
     private void doDel(HttpServletRequest request, HttpServletResponse response)
@@ -104,7 +121,7 @@ public class AllGroupsServlet extends HttpServlet {
 
         Gson gson = new Gson();
         String json = gson.toJson(r);
-        //out.write(json);
+        out.write(json);
         out.close();
 
         session.close();
