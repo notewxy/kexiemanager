@@ -9,4 +9,16 @@
         select * from groupmun where group_id = #{groupId}
     </select>
 
+    <delete id="delGroupMunById" parameterType="Integer">
+        delete from groupmun where id = #{id}
+    </delete>
+
+    <insert id="AddGroupMun" parameterType="GroupMun">
+        insert into groupmun(name,gender,number,work,group_id) values(#{name},#{gender},#{number},#{work},#{groupId})
+    </insert>
+
+    <update id="UpdateGroupMunById" parameterType="GroupMun">
+        update groupmun set name = #{name},gender = #{gender},number = #{number},work = #{work},group_id = #{groupId} where id = #{id}
+    </update>
+
 </mapper>

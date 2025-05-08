@@ -18,4 +18,19 @@ public class GroupMunServiceImpl implements GroupMunService {
     public List<GroupMun> showGroupsMunById(int groupId) {
         return groupMunMapper.showGroupsMunById(groupId);
     }
+
+    @Override
+    public int delGroupMunById(Integer id) {
+        return groupMunMapper.delGroupMunById(id);
+    }
+
+    @Override
+    public int AddGroupMun(GroupMun groupMun) {
+        return groupMunMapper.AddGroupMun(groupMun);
+    }
+
+    @Override
+    public int UpdateGroupMunById(GroupMun groupMun) {
+        return groupMunMapper.UpdateGroupMunById(groupMun);
+    }
 }
