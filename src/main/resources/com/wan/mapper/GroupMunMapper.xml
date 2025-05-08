@@ -5,4 +5,8 @@
 
 <mapper namespace="com.wan.mapper.GroupMunMapper">
 
+    <select id="showGroupsMunById" parameterType="Integer" resultType="GroupMun">
+        select * from groupmun where group_id = #{groupId}
+    </select>
+
 </mapper>
