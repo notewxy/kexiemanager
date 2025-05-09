@@ -31,4 +31,9 @@ public class AllGroupsServiceImpl implements AllGroupsService {
     public int UpdateGroupsById(AllGroups allGroups) {
         return allGroupsMapper.updateGroupsById(allGroups);
     }
+
+    @Override
+    public AllGroups showSingleGroupById(Integer i) {
+        return allGroupsMapper.selectSingleGroupById(i);
+    }
 }

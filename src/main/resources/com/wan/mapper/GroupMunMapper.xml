@@ -21,4 +21,8 @@
         update groupmun set name = #{name},gender = #{gender},number = #{number},work = #{work},group_id = #{groupId} where id = #{id}
     </update>
 
+    <select id="showSingleGroupsMunById" parameterType="Integer" resultType="GroupMun">
+        select * from groupmun where id = #{id}
+    </select>
+
 </mapper>

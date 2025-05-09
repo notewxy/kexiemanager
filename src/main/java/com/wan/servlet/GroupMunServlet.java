@@ -34,13 +34,29 @@ public class GroupMunServlet extends HttpServlet {
             doDel(request,response);
         }else if ("/GroupMun/add".equals(servletPath)){
             doAdd(request,response);
-        }else if ("/GroupMun/update".equals(servletPath)){
+        }else if ("/GroupMun/update".equals(servletPath)){   //可以选择改变或不改变
             doUpdate(request,response);
-        }else if ("/GroupMun/change".equals(servletPath)){  //修改组别
-            //doChange(request,response);
+        }else if ("/GroupMun/show".equals(servletPath)){  //在修改页面查询具体单个成员信息
+            doShow(request,response);
         }
 
 
+    }
+
+    private void doShow(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        SqlSession session = getSession();
+        GroupMunService groupMunService = getGroupMunService(session);
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+
+        GroupMun groupMun = groupMunService.showSingleGroupsMunById(1);
+        out.print(groupMun.toString());
+
+        out.close();
+        session.close();
     }
 
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +78,7 @@ public class GroupMunServlet extends HttpServlet {
         groupMun.setGender("女");
         groupMun.setNumber(20249);
         groupMun.setWork("组员");
+        groupMun.setGroupId(1);
 
         int i = groupMunService.UpdateGroupMunById(groupMun);
 

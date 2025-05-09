@@ -33,4 +33,9 @@ public class GroupMunServiceImpl implements GroupMunService {
     public int UpdateGroupMunById(GroupMun groupMun) {
         return groupMunMapper.UpdateGroupMunById(groupMun);
     }
+
+    @Override
+    public GroupMun showSingleGroupsMunById(Integer id) {
+        return groupMunMapper.showSingleGroupsMunById(id);
+    }
 }

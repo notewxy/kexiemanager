@@ -12,4 +12,6 @@ public interface GroupMunService {
     int AddGroupMun(GroupMun groupMun);
 
     int UpdateGroupMunById(GroupMun groupMun);
+
+    GroupMun showSingleGroupsMunById(Integer id);
 }

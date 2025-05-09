@@ -11,4 +11,6 @@ public interface AllGroupsMapper {
     int addGroups(AllGroups allGroups);
 
     int updateGroupsById(AllGroups allGroups);
+
+    AllGroups selectSingleGroupById(Integer id);
 }

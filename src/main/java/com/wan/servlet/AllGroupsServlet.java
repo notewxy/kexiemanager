@@ -38,7 +38,26 @@ public class AllGroupsServlet extends HttpServlet {
             doAdd(request,response);
         }else if ("/AllGroups/update".equals(servletPath)){
             doUpdate(request,response);
+        }else if ("/AllGroups/show".equals(servletPath)){
+            doShow(request,response);
         }
+    }
+
+    private void doShow(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        SqlSession session = getSession();
+        AllGroupsService allGroupsService = getAllGroupsService(session);
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+
+        AllGroups allGroups = allGroupsService.showSingleGroupById(1);
+        out.print(allGroups.toString());
+
+        out.close();
+
+        session.close();
     }
 
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)

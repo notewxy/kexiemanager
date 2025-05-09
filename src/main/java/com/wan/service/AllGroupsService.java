@@ -10,4 +10,6 @@ public interface AllGroupsService{
     int AddGroups(AllGroups allGroups);
 
     int UpdateGroupsById(AllGroups allGroups);
+
+    AllGroups showSingleGroupById(Integer i);
 }

@@ -19,4 +19,9 @@
     <update id="updateGroupsById" parameterType="AllGroups">
         update allgroups set name = #{name},introduce = #{introduce} where id = #{id}
     </update>
+
+    <select id="selectSingleGroupById" parameterType="Integer" resultType="AllGroups">
+        select * from allgroups where id = #{id}
+    </select>
+
 </mapper>
