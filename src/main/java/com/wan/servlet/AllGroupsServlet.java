@@ -6,6 +6,7 @@ import com.wan.pojo.AllGroups;
 import com.wan.r.R;
 import com.wan.service.AllGroupsService;
 import com.wan.service.impl.AllGroupsServiceImpl;
+import com.wan.util.Help;
 import com.wan.util.SSFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+
+import static com.wan.util.Help.getJson;
 
 @WebServlet({"/AllGroups/*"})
 public class AllGroupsServlet extends HttpServlet {
@@ -53,7 +56,8 @@ public class AllGroupsServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         AllGroups allGroups = allGroupsService.showSingleGroupById(1);
-        out.print(allGroups.toString());
+
+        out.write(getJson(allGroups));
 
         out.close();
 
@@ -164,14 +168,8 @@ public class AllGroupsServlet extends HttpServlet {
             out.println(allGroup.getImage()+"<br>");
         }*/
 
-        R r = new R();
-        r.setCode("200");
-        r.setState("ok");
-        r.setData(allGroups);
+        out.write(getJson(allGroups));
 
-        Gson gson = new Gson();
-        String json = gson.toJson(r);
-        out.write(json);
         out.close();
 
         session.close();

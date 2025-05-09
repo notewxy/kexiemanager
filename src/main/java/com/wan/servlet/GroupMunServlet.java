@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static com.wan.util.Help.getJson;
+
 @WebServlet({"/GroupMun/*"})
 public class GroupMunServlet extends HttpServlet {
     @Override
@@ -53,7 +55,8 @@ public class GroupMunServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         GroupMun groupMun = groupMunService.showSingleGroupsMunById(1);
-        out.print(groupMun.toString());
+
+        out.write(getJson(groupMun));   //向前端传递数据
 
         out.close();
         session.close();
@@ -168,6 +171,8 @@ public class GroupMunServlet extends HttpServlet {
         for (GroupMun groupMun : groupMuns) {
             out.print(groupMun.toString());
         }
+
+        out.write(getJson(groupMuns));   //向前端传递数据
 
         out.close();
 
