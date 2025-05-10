@@ -5,4 +5,12 @@
 
 <mapper namespace="com.wan.mapper.UsersMapper">
 
+    <select id="getPasswordByName" parameterType="String" resultType="String">
+        select password from users where name = #{username}
+    </select>
+
+    <insert id="AddUsers" parameterType="Users">
+        insert into users(name,password) values(#{name},#{password})
+    </insert>
+
 </mapper>
