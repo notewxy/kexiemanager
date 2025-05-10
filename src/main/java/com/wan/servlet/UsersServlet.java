@@ -13,6 +13,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,6 +64,7 @@ public class UsersServlet extends HttpServlet {
                 out.print(getJson("注册失败"));
             }else{
                 out.print(getJson("注册成功"));
+                //到时候前端再转到登录页面
             }
         }
 
@@ -82,7 +84,7 @@ public class UsersServlet extends HttpServlet {
 
         //获取前端的用户名和密码，通过用户名查询对应的密码，并进行比较
         String username = "wan";
-        String password = "1234";
+        String password = "123";
 
         String truePW = usersService.getPasswordByName(username);
         //out.print("truePW:"+truePW);
@@ -92,6 +94,27 @@ public class UsersServlet extends HttpServlet {
             out.write(getJson("用户名不存在"));
         }else if (truePW.equals(password)){
             out.write(getJson("登录成功"));
+            //创建成功，存入用户名
+            request.getSession().setAttribute("username",username);
+
+            //前端获取"是否选择十天内免登录的选项",判断是否为1
+            String f = "1";
+            if ("1".equals(f)){
+                Cookie cookie1 = new Cookie("username", username);
+                Cookie cookie2 = new Cookie("password", password);
+
+                cookie1.setMaxAge(60*60*24*10);   //10天
+                cookie2.setMaxAge(60*60*24*10);
+
+                cookie1.setPath(request.getContextPath());
+                cookie2.setPath(request.getContextPath());
+
+                //响应给浏览器
+                response.addCookie(cookie1);
+                response.addCookie(cookie2);
+            }else{
+                //前端应该不需要再判断了，每当发送请求的时候，访问后端，将后端的检验结果返回即可。
+            }
         }else {
             out.write(getJson("密码错误"));
         }

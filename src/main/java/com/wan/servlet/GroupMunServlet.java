@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -28,21 +29,31 @@ public class GroupMunServlet extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+
         String servletPath = request.getServletPath()+request.getPathInfo();
 
-        if ("/GroupMun/list".equals(servletPath)){
-            doList(request,response);
-        }else if ("/GroupMun/del".equals(servletPath)){
-            doDel(request,response);
-        }else if ("/GroupMun/add".equals(servletPath)){
-            doAdd(request,response);
-        }else if ("/GroupMun/update".equals(servletPath)){   //可以选择改变或不改变
-            doUpdate(request,response);
-        }else if ("/GroupMun/show".equals(servletPath)){  //在修改页面查询具体单个成员信息
-            doShow(request,response);
+        HttpSession session = request.getSession(false);
+
+        if (session != null && session.getAttribute("username")!=null){
+            if ("/GroupMun/list".equals(servletPath)){
+                doList(request,response);
+            }else if ("/GroupMun/del".equals(servletPath)){
+                doDel(request,response);
+            }else if ("/GroupMun/add".equals(servletPath)){
+                doAdd(request,response);
+            }else if ("/GroupMun/update".equals(servletPath)){   //可以选择改变或不改变
+                doUpdate(request,response);
+            }else if ("/GroupMun/show".equals(servletPath)){  //在修改页面查询具体单个成员信息
+                doShow(request,response);
+            }
+        }else{
+            out.write(getJson("请先登录"));
         }
 
-
+        out.close();
     }
 
     private void doShow(HttpServletRequest request, HttpServletResponse response)
