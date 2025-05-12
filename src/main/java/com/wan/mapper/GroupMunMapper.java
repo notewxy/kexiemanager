@@ -14,4 +14,6 @@ public interface GroupMunMapper {
     int UpdateGroupMunById(GroupMun groupMun);
 
     GroupMun showSingleGroupsMunById(Integer id);
+
+    List<GroupMun> showAll();
 }

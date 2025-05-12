@@ -48,12 +48,31 @@ public class GroupMunServlet extends HttpServlet {
                 doUpdate(request,response);
             }else if ("/GroupMun/show".equals(servletPath)){  //在修改页面查询具体单个成员信息
                 doShow(request,response);
+            }else if ("/GroupMun/all".equals(servletPath)){
+                doAll(request,response);
             }
         }else{
             out.write(getJson("请先登录"));
         }
 
         out.close();
+    }
+
+    private void doAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        SqlSession session = getSession();
+        GroupMunService groupMunService = getGroupMunService(session);
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+
+        List<GroupMun> groupMuns = groupMunService.showAll();
+
+        out.write(getJson(groupMuns));
+
+        out.close();
+
+        session.close();
     }
 
     private void doShow(HttpServletRequest request, HttpServletResponse response)

@@ -38,4 +38,9 @@ public class GroupMunServiceImpl implements GroupMunService {
     public GroupMun showSingleGroupsMunById(Integer id) {
         return groupMunMapper.showSingleGroupsMunById(id);
     }
+
+    @Override
+    public List<GroupMun> showAll() {
+        return groupMunMapper.showAll();
+    }
 }
