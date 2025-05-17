@@ -29,4 +29,12 @@
         select * from groupmun
     </select>
 
+    <select id="sortByNumberUp" resultType="GroupMun">
+        select * from groupmun order by number asc
+    </select>
+
+    <select id="sortByNumberDown" resultType="GroupMun">
+        select * from groupmun order by number desc
+    </select>
+
 </mapper>

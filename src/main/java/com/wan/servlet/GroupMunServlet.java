@@ -50,12 +50,50 @@ public class GroupMunServlet extends HttpServlet {
                 doShow(request,response);
             }else if ("/GroupMun/all".equals(servletPath)){
                 doAll(request,response);
+            }else if ("/GroupMun/sort1".equals(servletPath)){  //升序
+                doSort1(request,response);
+            }else if ("/GroupMun/sort2".equals(servletPath)){  //降序
+                doSort2(request,response);
             }
         }else{
             out.write(getJson("请先登录"));
         }
 
         out.close();
+    }
+
+    private void doSort2(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        SqlSession session = getSession();
+        GroupMunService groupMunService = getGroupMunService(session);
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+
+        List<GroupMun> groupMuns = groupMunService.sortByNumberDown();
+
+        out.write(getJson(groupMuns));
+
+        out.close();
+
+        session.close();
+    }
+
+    private void doSort1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        SqlSession session = getSession();
+        GroupMunService groupMunService = getGroupMunService(session);
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+
+        List<GroupMun> groupMuns = groupMunService.sortByNumberUp();
+
+        out.write(getJson(groupMuns));
+
+        out.close();
+
+        session.close();
     }
 
     private void doAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -198,10 +236,9 @@ public class GroupMunServlet extends HttpServlet {
         int groupId = 1;
 
         List<GroupMun> groupMuns = groupMunService.showGroupsMunById(groupId);
-        for (GroupMun groupMun : groupMuns) {
+        /*for (GroupMun groupMun : groupMuns) {
             out.print(groupMun.toString());
-        }
-
+        }*/
         out.write(getJson(groupMuns));   //向前端传递数据
 
         out.close();

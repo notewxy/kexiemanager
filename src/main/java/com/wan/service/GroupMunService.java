@@ -16,4 +16,8 @@ public interface GroupMunService {
     GroupMun showSingleGroupsMunById(Integer id);
 
     List<GroupMun> showAll();
+
+    List<GroupMun> sortByNumberUp();
+
+    List<GroupMun> sortByNumberDown();
 }

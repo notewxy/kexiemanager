@@ -43,4 +43,14 @@ public class GroupMunServiceImpl implements GroupMunService {
     public List<GroupMun> showAll() {
         return groupMunMapper.showAll();
     }
+
+    @Override
+    public List<GroupMun> sortByNumberUp() {
+        return groupMunMapper.sortByNumberUp();
+    }
+
+    @Override
+    public List<GroupMun> sortByNumberDown() {
+        return groupMunMapper.sortByNumberDown();
+    }
 }
