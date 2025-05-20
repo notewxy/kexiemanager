@@ -20,13 +20,14 @@ public class CrossFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse)servletResponse;
 
         /* 解决跨域问题 */
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:8081");
         // 允许的方法（如POST, GET等）
         resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         // 预检请求的缓存时间
         resp.setHeader("Access-Control-Max-Age", "3600");
         // 允许的头信息
         resp.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type, accept, origin, authorization");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
 
         filterChain.doFilter(req,resp);  //继续执行，放行
     }

@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +19,7 @@ import java.io.PrintWriter;
 import static com.wan.util.Help.getJson;
 
 @WebServlet("/WelcomeServlet")
+@MultipartConfig
 public class WelcomeServlet extends HttpServlet {
 
     @Override

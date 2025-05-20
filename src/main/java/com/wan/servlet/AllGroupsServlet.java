@@ -12,6 +12,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import java.util.List;
 import static com.wan.util.Help.getJson;
 
 @WebServlet({"/AllGroups/*"})
+@MultipartConfig
 public class AllGroupsServlet extends HttpServlet {
 
     @Override
@@ -68,7 +70,9 @@ public class AllGroupsServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
 
-        AllGroups allGroups = allGroupsService.showSingleGroupById(1);
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        AllGroups allGroups = allGroupsService.showSingleGroupById(id);
 
         out.write(getJson(allGroups));
 
@@ -83,10 +87,14 @@ public class AllGroupsServlet extends HttpServlet {
         AllGroupsService allGroupsService = getAllGroupsService(session);
 
         //获取修改的当前id,获取修改的name和introduce
+        int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        String introduce = request.getParameter("introduce");
+
         AllGroups allGroups = new AllGroups();
-        allGroups.setId(4);
-        allGroups.setName("2");
-        allGroups.setIntroduce("222");
+        allGroups.setId(id);
+        allGroups.setName(name);
+        allGroups.setIntroduce(introduce);
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
@@ -95,9 +103,9 @@ public class AllGroupsServlet extends HttpServlet {
         int i = allGroupsService.UpdateGroupsById(allGroups);
         System.out.println(i);
         if (i>0){
-            out.print("修改成功");
+            out.print(getJson("修改成功"));
         }else {
-            out.print("修改失败");
+            out.print(getJson("修改失败"));
         }
 
         out.close();
@@ -117,16 +125,19 @@ public class AllGroupsServlet extends HttpServlet {
 
 
         //获取前端表单,只需要name和introduce就行
+        String name = request.getParameter("name");
+        String introduce = request.getParameter("introduce");
+
         AllGroups allGroups = new AllGroups();
-        allGroups.setName("www");
-        allGroups.setIntroduce("111");
+        allGroups.setName(name);
+        allGroups.setIntroduce(introduce);
 
         int i = allGroupsService.AddGroups(allGroups);
         System.out.println(i);
         if (i>0){
-            out.print("添加成功");
+            out.print(getJson("添加成功"));
         }else {
-            out.print("添加失败");
+            out.print(getJson("添加失败"));
         }
 
         out.close();
@@ -144,19 +155,15 @@ public class AllGroupsServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
 
-        out.print("你好");
-
-
         //这个数字到时候需要在前端获取
-        String idStr = request.getParameter("id");
-        int id = Integer.parseInt(idStr);
+        int id = Integer.parseInt(request.getParameter("id"));
 
         int i = allGroupsService.DelGroupsById(id);
         System.out.println(i);
         if (i>0){
-            out.print("删除成功");
+            out.print(getJson("删除成功"));
         }else {
-            out.print("删除失败");
+            out.print(getJson("删除失败"));
         }
 
         out.close();

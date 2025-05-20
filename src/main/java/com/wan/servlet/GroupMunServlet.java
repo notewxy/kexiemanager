@@ -12,6 +12,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import java.util.List;
 import static com.wan.util.Help.getJson;
 
 @WebServlet({"/GroupMun/*"})
+@MultipartConfig
 public class GroupMunServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -122,7 +124,9 @@ public class GroupMunServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
 
-        GroupMun groupMun = groupMunService.showSingleGroupsMunById(1);
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        GroupMun groupMun = groupMunService.showSingleGroupsMunById(id);
 
         out.write(getJson(groupMun));   //向前端传递数据
 
@@ -140,24 +144,28 @@ public class GroupMunServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         //获取当前成员编号 和 提交的表单，修改当前小组的成员
-        //当前的group_id不用修改
-        int id = 7;
+        int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        String gender = request.getParameter("gender");
+        int number = Integer.parseInt(request.getParameter("number"));
+        String work = request.getParameter("work");
+        int groupId = Integer.parseInt(request.getParameter("groupid"));
 
         GroupMun groupMun = new GroupMun();
         groupMun.setId(id);
-        groupMun.setName("小万");
-        groupMun.setGender("女");
-        groupMun.setNumber(20249);
-        groupMun.setWork("组员");
-        groupMun.setGroupId(1);
+        groupMun.setName(name);
+        groupMun.setGender(gender);
+        groupMun.setNumber(number);
+        groupMun.setWork(work);
+        groupMun.setGroupId(groupId);
 
         int i = groupMunService.UpdateGroupMunById(groupMun);
 
         if (i>0){
-            out.print("修改成功");
+            out.print(getJson("修改成功"));
             out.print("<a href='/SA/GroupMun/list'>返回</a>");
         }else {
-            out.print("修改失败");
+            out.print(getJson("修改失败"));
         }
 
         session.commit();
@@ -173,22 +181,26 @@ public class GroupMunServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
 
-        //从前端获取小组编号 和 提交的表单，添加当前小组的成员
-        int groupId = 1; //当前小组编号
+        //从前端获取提交的表单，添加当前小组的成员
+        String name = request.getParameter("name");
+        String gender = request.getParameter("gender");
+        int number = Integer.parseInt(request.getParameter("number"));
+        String work = request.getParameter("work");
+        int groupId = Integer.parseInt(request.getParameter("groupid"));
 
         GroupMun groupMun = new GroupMun();
-        groupMun.setName("小王");
-        groupMun.setGender("男");
-        groupMun.setNumber(20247);
-        groupMun.setWork("组员");
+        groupMun.setName(name);
+        groupMun.setGender(gender);
+        groupMun.setNumber(number);
+        groupMun.setWork(work);
         groupMun.setGroupId(groupId);
 
         int i = groupMunService.AddGroupMun(groupMun);
         if (i>0){
-            out.print("添加成功");
+            out.print(getJson("添加成功"));
             out.print("<a href='/SA/GroupMun/list'>返回</a>");
         }else {
-            out.print("添加失败");
+            out.print(getJson("添加失败"));
         }
 
 
@@ -208,13 +220,12 @@ public class GroupMunServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         //从前端获取当前的成员id，删除成员
-        int id = 6;
+        int id = Integer.parseInt(request.getParameter("id"));
         int i = groupMunService.delGroupMunById(id);
         if (i>0){
-            out.print("删除成功");
-            out.print("<a href='/SA/GroupMun/list'>返回</a>");
+            out.print(getJson("删除成功"));
         }else {
-            out.print("删除失败");
+            out.print(getJson("删除失败"));
         }
 
         out.close();
@@ -233,7 +244,7 @@ public class GroupMunServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         //获取当前的小组编号，在成员表中查找对应小组的成员
-        int groupId = 1;
+        int groupId = Integer.parseInt(request.getParameter("groupid"));
 
         List<GroupMun> groupMuns = groupMunService.showGroupsMunById(groupId);
         /*for (GroupMun groupMun : groupMuns) {

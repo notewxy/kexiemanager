@@ -12,6 +12,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +24,7 @@ import java.io.PrintWriter;
 import static com.wan.util.Help.getJson;
 
 @WebServlet({"/Users/*"})
+@MultipartConfig
 public class UsersServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -48,8 +50,8 @@ public class UsersServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         //获取前端的表单，先判断用户名是否存在，如果存在，则提示用户名已存在，如果不存在，则添加用户
-        String username = "wanwan";
-        String password = "789";
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
         Users users = new Users(username, password);
 
         String truePW = usersService.getPasswordByName(username);
@@ -82,9 +84,21 @@ public class UsersServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
 
+        /*java.util.Map<String, String[]> parameterMap = request.getParameterMap();
+        if (parameterMap != null && !parameterMap.isEmpty()) {
+            System.out.println("---- Received Parameters ----");
+            for (java.util.Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+                System.out.println("Key: " + entry.getKey() + ", Value: " + java.util.Arrays.toString(entry.getValue()));
+            }
+            System.out.println("-----------------------------");
+        } else {
+            System.out.println("No parameters found in request.getParameterMap().");
+        }*/
+
         //获取前端的用户名和密码，通过用户名查询对应的密码，并进行比较
-        String username = "wan";
-        String password = "123";
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String f = request.getParameter("rememberMe");
 
         String truePW = usersService.getPasswordByName(username);
         //out.print("truePW:"+truePW);
@@ -98,7 +112,6 @@ public class UsersServlet extends HttpServlet {
             request.getSession().setAttribute("username",username);
 
             //前端获取"是否选择十天内免登录的选项",判断是否为1
-            String f = "1";
             if ("1".equals(f)){
                 Cookie cookie1 = new Cookie("username", username);
                 Cookie cookie2 = new Cookie("password", password);
