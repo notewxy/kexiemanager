@@ -1,12 +1,12 @@
 package com.wan.servlet;
 
-import com.google.gson.Gson;
+
 import com.wan.mapper.AllGroupsMapper;
 import com.wan.pojo.AllGroups;
-import com.wan.r.R;
+
 import com.wan.service.AllGroupsService;
 import com.wan.service.impl.AllGroupsServiceImpl;
-import com.wan.util.Help;
+
 import com.wan.util.SSFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,14 +17,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
 import static com.wan.util.Help.getJson;
 
-@WebServlet({"/AllGroups/*"})
+@WebServlet({"/api/AllGroups/*"})
 @MultipartConfig
 public class AllGroupsServlet extends HttpServlet {
 
@@ -38,20 +38,20 @@ public class AllGroupsServlet extends HttpServlet {
 
         String servletPath = request.getServletPath()+request.getPathInfo();
 
-        HttpSession session = request.getSession(false);
+        String username = (String)request.getAttribute("authenticatedUsername");
 
-        if (session != null && session.getAttribute("username")!=null){
-            if ("/AllGroups/list".equals(servletPath)){
+        if (username != null){
+            if ("/api/AllGroups/list".equals(servletPath)){
                 System.out.println("???????????");
                 System.out.flush();
                 doList(request,response);
-            }else if ("/AllGroups/del".equals(servletPath)){
+            }else if ("/api/AllGroups/del".equals(servletPath)){
                 doDel(request,response);
-            }else if ("/AllGroups/add".equals(servletPath)){
+            }else if ("/api/AllGroups/add".equals(servletPath)){
                 doAdd(request,response);
-            }else if ("/AllGroups/update".equals(servletPath)){
+            }else if ("/api/AllGroups/update".equals(servletPath)){
                 doUpdate(request,response);
-            }else if ("/AllGroups/show".equals(servletPath)){
+            }else if ("/api/AllGroups/show".equals(servletPath)){
                 doShow(request,response);
             }
         }else{

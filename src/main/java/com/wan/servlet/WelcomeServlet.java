@@ -18,7 +18,7 @@ import java.io.PrintWriter;
 
 import static com.wan.util.Help.getJson;
 
-@WebServlet("/WelcomeServlet")
+@WebServlet("/api/WelcomeServlet")
 @MultipartConfig
 public class WelcomeServlet extends HttpServlet {
 

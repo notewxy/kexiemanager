@@ -7,6 +7,7 @@ import com.wan.service.AllGroupsService;
 import com.wan.service.UsersService;
 import com.wan.service.impl.AllGroupsServiceImpl;
 import com.wan.service.impl.UsersServiceImpl;
+import com.wan.util.JwtUtil;
 import com.wan.util.SSFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -20,10 +21,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.wan.util.Help.getJson;
 
-@WebServlet({"/Users/*"})
+@WebServlet({"/api/Users/*"})
 @MultipartConfig
 public class UsersServlet extends HttpServlet {
     @Override
@@ -32,9 +35,9 @@ public class UsersServlet extends HttpServlet {
 
         String servletPath = request.getServletPath()+request.getPathInfo();
 
-        if ("/Users/login".equals(servletPath)){
+        if ("/api/Users/login".equals(servletPath)){
             doCheck(request,response);
-        }else if ("/Users/register".equals(servletPath)){
+        }else if ("/api/Users/register".equals(servletPath)){
             doRegister(request,response);
         }
 
@@ -55,7 +58,7 @@ public class UsersServlet extends HttpServlet {
         Users users = new Users(username, password);
 
         String truePW = usersService.getPasswordByName(username);
-        out.print("truePW:"+truePW);
+        //out.print("truePW:"+truePW);
 
         //将结果反馈给前端
         if (truePW != null){
@@ -107,7 +110,34 @@ public class UsersServlet extends HttpServlet {
         if (truePW == null){
             out.write(getJson("用户名不存在"));
         }else if (truePW.equals(password)){
-            out.write(getJson("登录成功"));
+
+            // 用户认证成功
+            Map<String, Object> claimsForAccessToken = new HashMap<>();
+            // 将从数据库获取的用户ID、角色等信息放入 claims
+            //claimsForAccessToken.put("userId", request.getAttribute("userId")); // 示例
+            //claimsForAccessToken.put("roles", request.getAttribute("roles")); // 示例
+
+            // 1. 生成 Access Token
+            String accessToken = JwtUtil.generateAccessToken(username, claimsForAccessToken);
+            Map<String, String> responseData = new HashMap<>();
+            responseData.put("accessToken", accessToken); // 将 Access Token 返回给前端
+
+            // 2. 根据前端的“记住我”标志决定是否生成 Refresh Token
+            if ("1".equals(f)) { // 如果 f 为 "1"，表示用户选择了“十天内免登录”
+                String refreshToken = JwtUtil.generateRefreshToken(username);
+                responseData.put("refreshToken", refreshToken); // 将 Refresh Token 返回给前端
+                System.out.println("User " + username + " logged in with 'remember me' option. Refresh Token generated.");
+            } else {
+                System.out.println("User " + username + " logged in (no 'remember me' option selected).");
+            }
+
+            // 3. 使用 Help.getJson() 封装成功响应数据并发送
+            out.print(getJson(responseData));
+            System.out.println("Login successful for user: " + username + ". Response sent.");
+
+
+
+            /*out.write(getJson("登录成功"));
             //创建成功，存入用户名
             request.getSession().setAttribute("username",username);
 
@@ -127,7 +157,8 @@ public class UsersServlet extends HttpServlet {
                 response.addCookie(cookie2);
             }else{
                 //前端应该不需要再判断了，每当发送请求的时候，访问后端，将后端的检验结果返回即可。
-            }
+            }*/
+
         }else {
             out.write(getJson("密码错误"));
         }

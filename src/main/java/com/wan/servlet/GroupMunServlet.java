@@ -24,7 +24,7 @@ import java.util.List;
 
 import static com.wan.util.Help.getJson;
 
-@WebServlet({"/GroupMun/*"})
+@WebServlet({"/api/GroupMun/*"})
 @MultipartConfig
 public class GroupMunServlet extends HttpServlet {
     @Override
@@ -37,24 +37,24 @@ public class GroupMunServlet extends HttpServlet {
 
         String servletPath = request.getServletPath()+request.getPathInfo();
 
-        HttpSession session = request.getSession(false);
+        String username = (String)request.getAttribute("authenticatedUsername");
 
-        if (session != null && session.getAttribute("username")!=null){
-            if ("/GroupMun/list".equals(servletPath)){
+        if (username != null){
+            if ("/api/GroupMun/list".equals(servletPath)){
                 doList(request,response);
-            }else if ("/GroupMun/del".equals(servletPath)){
+            }else if ("/api/GroupMun/del".equals(servletPath)){
                 doDel(request,response);
-            }else if ("/GroupMun/add".equals(servletPath)){
+            }else if ("/api/GroupMun/add".equals(servletPath)){
                 doAdd(request,response);
-            }else if ("/GroupMun/update".equals(servletPath)){   //可以选择改变或不改变
+            }else if ("/api/GroupMun/update".equals(servletPath)){   //可以选择改变或不改变
                 doUpdate(request,response);
-            }else if ("/GroupMun/show".equals(servletPath)){  //在修改页面查询具体单个成员信息
+            }else if ("/api/GroupMun/show".equals(servletPath)){  //在修改页面查询具体单个成员信息
                 doShow(request,response);
-            }else if ("/GroupMun/all".equals(servletPath)){
+            }else if ("/api/GroupMun/all".equals(servletPath)){
                 doAll(request,response);
-            }else if ("/GroupMun/sort1".equals(servletPath)){  //升序
+            }else if ("/api/GroupMun/sort1".equals(servletPath)){  //升序
                 doSort1(request,response);
-            }else if ("/GroupMun/sort2".equals(servletPath)){  //降序
+            }else if ("/api/GroupMun/sort2".equals(servletPath)){  //降序
                 doSort2(request,response);
             }
         }else{
@@ -186,7 +186,7 @@ public class GroupMunServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         int number = Integer.parseInt(request.getParameter("number"));
         String work = request.getParameter("work");
-        int groupId = Integer.parseInt(request.getParameter("groupid"));
+        int groupId = Integer.parseInt(request.getParameter("groupId"));
 
         GroupMun groupMun = new GroupMun();
         groupMun.setName(name);
@@ -198,7 +198,6 @@ public class GroupMunServlet extends HttpServlet {
         int i = groupMunService.AddGroupMun(groupMun);
         if (i>0){
             out.print(getJson("添加成功"));
-            out.print("<a href='/SA/GroupMun/list'>返回</a>");
         }else {
             out.print(getJson("添加失败"));
         }
@@ -244,7 +243,7 @@ public class GroupMunServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         //获取当前的小组编号，在成员表中查找对应小组的成员
-        int groupId = Integer.parseInt(request.getParameter("groupid"));
+        int groupId = Integer.parseInt(request.getParameter("groupId"));
 
         List<GroupMun> groupMuns = groupMunService.showGroupsMunById(groupId);
         /*for (GroupMun groupMun : groupMuns) {
