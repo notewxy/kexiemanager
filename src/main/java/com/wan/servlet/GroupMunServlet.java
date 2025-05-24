@@ -149,7 +149,7 @@ public class GroupMunServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         int number = Integer.parseInt(request.getParameter("number"));
         String work = request.getParameter("work");
-        int groupId = Integer.parseInt(request.getParameter("groupid"));
+        int groupId = Integer.parseInt(request.getParameter("groupId"));
 
         GroupMun groupMun = new GroupMun();
         groupMun.setId(id);
@@ -163,7 +163,6 @@ public class GroupMunServlet extends HttpServlet {
 
         if (i>0){
             out.print(getJson("修改成功"));
-            out.print("<a href='/SA/GroupMun/list'>返回</a>");
         }else {
             out.print(getJson("修改失败"));
         }
