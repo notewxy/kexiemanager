@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科协管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .welcome-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6c5ce7, #a8e6cf);
+        }
+        .welcome-title {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <h1 class="welcome-title">欢迎使用科协管理系统</h1>
+        <div class="btn-container">
+            <a href="login.html" class="btn btn-light btn-lg">登录</a>
+            <a href="register.html" class="btn btn-outline-light btn-lg">注册</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/api.js"></script>
+    <script>
+        // 页面加载时检查登录状态
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:8080/SA/api/WelcomeServlet', {
+                    method: 'GET',
+                    credentials: 'include' // 包含cookie
+                });
+                const result = await response.json();
+                
+                // 如果后端返回登录成功，直接跳转到dashboard页面
+                if (result.state === 'ok' && result.code === '200' && result.data === '登录成功') {
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                console.error('检查登录状态失败:', error);
+                // 检查失败不做处理，保持在首页
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪表盘 - 科协管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="css/purple-theme.css" rel="stylesheet">
+    <style>
+        .table-actions {
+            white-space: nowrap;
+        }
+        .modal-backdrop {
+            z-index: 1040;
+        }
+        .modal {
+            z-index: 1050;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <div class="col-md-2 sidebar">
+                <h3 class="mb-4"><i class="fas fa-cogs me-2"></i>科协管理系统</h3>
+                <div class="nav flex-column">
+                    <a href="#" class="nav-link active" data-page="groups">
+                        <i class="fas fa-users-cog me-2"></i>小组管理
+                    </a>
+                    <a href="#" class="nav-link" data-page="members">
+                        <i class="fas fa-user-friends me-2"></i>所有成员
+                    </a>
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt me-2"></i>退出登录
+                    </a>
+                </div>
+            </div>
+
+            <!-- 主要内容区域 -->
+            <div class="col-md-10 content">
+                <!-- 小组列表页面 -->
+                <div id="groupsListPage">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-users-cog me-2"></i>小组管理</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+                            <i class="fas fa-plus me-1"></i> 添加小组
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>小组名称</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="groupsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 小组详情页面 -->
+                <div id="groupDetailPage" style="display: none;">
+                    <button class="btn btn-secondary back-button" id="backToGroups">
+                        <i class="fas fa-arrow-left me-1"></i> 返回小组列表
+                    </button>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 id="groupDetailTitle"><i class="fas fa-info-circle me-2"></i>小组详情</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                            <i class="fas fa-user-plus me-1"></i> 添加成员
+                        </button>
+                    </div>
+                    <!-- 小组介绍区域 -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-book me-2"></i>小组介绍</h5>
+                        </div>
+                        <div class="card-body">
+                            <p id="groupIntroduceText" class="mb-0">暂无介绍</p>
+                        </div>
+                    </div>
+                    <!-- 小组成员表格 -->
+                    <h4 class="mb-3"><i class="fas fa-users me-2"></i>小组成员</h4>
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>姓名</th>
+                                            <th>性别</th>
+                                            <th>学号</th>
+                                            <th>职位</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="groupMembersTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 所有成员页面 -->
+                <div id="allMembersPage" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-user-friends me-2"></i>所有成员</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAllMemberModal">
+                            <i class="fas fa-user-plus me-1"></i> 添加成员
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>姓名</th>
+                                            <th>所属小组</th>
+                                            <th>性别</th>
+                                            <th>学号</th>
+                                            <th>职位</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="allMembersTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button class="btn btn-outline-secondary me-2" id="sortOriginal">
+                            <i class="fas fa-sort me-1"></i> 原序
+                        </button>
+                        <button class="btn btn-outline-secondary me-2" id="sortAsc">
+                            <i class="fas fa-sort-amount-up-alt me-1"></i> 升序
+                        </button>
+                        <button class="btn btn-outline-secondary" id="sortDesc">
+                            <i class="fas fa-sort-amount-down-alt me-1"></i> 降序
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加小组模态框 -->
+    <div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addGroupModalLabel"><i class="fas fa-users-cog me-2"></i>添加小组</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addGroupForm">
+                        <div class="mb-3">
+                            <label for="groupName" class="form-label"><i class="fas fa-tag me-1"></i>小组名称</label>
+                            <input type="text" class="form-control" id="groupName" required placeholder="请输入小组名称">
+                        </div>
+                        <div class="mb-3">
+                            <label for="groupIntroduce" class="form-label"><i class="fas fa-info-circle me-1"></i>小组介绍</label>
+                            <textarea class="form-control" id="groupIntroduce" rows="3" placeholder="请输入小组介绍"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>取消</button>
+                    <button type="button" class="btn btn-primary" id="submitAddGroup"><i class="fas fa-save me-1"></i>确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加成员模态框 -->
+    <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addMemberModalLabel"><i class="fas fa-user-plus me-2"></i>添加成员</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMemberForm">
+                        <div class="mb-3">
+                            <label for="memberName" class="form-label"><i class="fas fa-user me-1"></i>姓名</label>
+                            <input type="text" class="form-control" id="memberName" required placeholder="请输入成员姓名">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberGender" class="form-label"><i class="fas fa-venus-mars me-1"></i>性别</label>
+                            <select class="form-select" id="memberGender" required>
+                                <option value="" disabled selected>请选择性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberNumber" class="form-label"><i class="fas fa-id-card me-1"></i>学号</label>
+                            <input type="text" class="form-control" id="memberNumber" placeholder="请输入学号">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberWork" class="form-label"><i class="fas fa-briefcase me-1"></i>职位</label>
+                            <input type="text" class="form-control" id="memberWork" value="成员" placeholder="请输入职位">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>取消</button>
+                    <button type="button" class="btn btn-primary" id="submitAddMember"><i class="fas fa-save me-1"></i>确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑小组模态框 -->
+    <div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editGroupModalLabel"><i class="fas fa-edit me-2"></i>编辑小组</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editGroupForm">
+                        <input type="hidden" id="editGroupId">
+                        <div class="mb-3">
+                            <label for="editGroupName" class="form-label"><i class="fas fa-tag me-1"></i>小组名称</label>
+                            <input type="text" class="form-control" id="editGroupName" required placeholder="请输入小组名称">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editGroupIntroduce" class="form-label"><i class="fas fa-info-circle me-1"></i>小组介绍</label>
+                            <textarea class="form-control" id="editGroupIntroduce" rows="3" placeholder="请输入小组介绍"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>取消</button>
+                    <button type="button" class="btn btn-primary" id="submitEditGroup"><i class="fas fa-save me-1"></i>确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑成员模态框 -->
+    <div class="modal fade" id="editMemberModal" tabindex="-1" aria-labelledby="editMemberModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMemberModalLabel"><i class="fas fa-user-edit me-2"></i>编辑成员</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editMemberForm">
+                        <input type="hidden" id="editMemberId">
+                        <div class="mb-3">
+                            <label for="editMemberName" class="form-label"><i class="fas fa-user me-1"></i>姓名</label>
+                            <input type="text" class="form-control" id="editMemberName" required placeholder="请输入成员姓名">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemberGroupId" class="form-label"><i class="fas fa-users me-1"></i>小组编号</label>
+                            <input type="number" class="form-control" id="editMemberGroupId" required placeholder="请输入小组编号">
+                            <div class="form-text">请输入正确的小组编号，可在小组管理页面查看</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemberGender" class="form-label"><i class="fas fa-venus-mars me-1"></i>性别</label>
+                            <select class="form-select" id="editMemberGender" required>
+                                <option value="" disabled>请选择性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemberNumber" class="form-label"><i class="fas fa-id-card me-1"></i>学号</label>
+                            <input type="text" class="form-control" id="editMemberNumber" placeholder="请输入学号">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemberWork" class="form-label"><i class="fas fa-briefcase me-1"></i>职位</label>
+                            <input type="text" class="form-control" id="editMemberWork" placeholder="请输入职位">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>取消</button>
+                    <button type="button" class="btn btn-primary" id="submitEditMember"><i class="fas fa-save me-1"></i>确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加所有成员模态框 -->
+    <div class="modal fade" id="addAllMemberModal" tabindex="-1" aria-labelledby="addAllMemberModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAllMemberModalLabel"><i class="fas fa-user-plus me-2"></i>添加成员</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addAllMemberForm">
+                        <div class="mb-3">
+                            <label for="allMemberName" class="form-label"><i class="fas fa-user me-1"></i>姓名</label>
+                            <input type="text" class="form-control" id="allMemberName" required placeholder="请输入成员姓名">
+                        </div>
+                        <div class="mb-3">
+                            <label for="allMemberGender" class="form-label"><i class="fas fa-venus-mars me-1"></i>性别</label>
+                            <select class="form-select" id="allMemberGender" required>
+                                <option value="" disabled selected>请选择性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="allMemberNumber" class="form-label"><i class="fas fa-id-card me-1"></i>学号</label>
+                            <input type="text" class="form-control" id="allMemberNumber" placeholder="请输入学号">
+                        </div>
+                        <div class="mb-3">
+                            <label for="allMemberWork" class="form-label"><i class="fas fa-briefcase me-1"></i>职位</label>
+                            <input type="text" class="form-control" id="allMemberWork" value="成员" placeholder="请输入职位">
+                        </div>
+                        <div class="mb-3">
+                            <label for="allMemberGroupId" class="form-label"><i class="fas fa-users me-1"></i>小组编号</label>
+                            <input type="number" class="form-control" id="allMemberGroupId" required placeholder="请输入小组编号">
+                            <div class="form-text">请输入正确的小组编号，可在小组管理页面查看</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>取消</button>
+                    <button type="button" class="btn btn-primary" id="submitAddAllMember"><i class="fas fa-save me-1"></i>确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
